@@ -1,59 +1,113 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { PersonDialogComponent } from 'src/app/dialogs/person-dialog/person-dialog.component';
 import { PersonModel } from 'src/app/models/person.model';
 import { PersonService } from 'src/app/services/person.service';
 
 @Component({
   selector: 'app-person',
   templateUrl: './person.component.html',
-  styleUrls: ['./person.component.scss']
+  styleUrls: ['./person.component.scss', '../../../styles.scss']
 })
-export class PersonComponent implements OnInit {
-  personList: PersonModel[] = [];
-  constructor(private personService: PersonService) { }
-  // @ViewChild('paginator') paginator: MatPaginator = new MatPaginator();
-  displayedColumns = ['id', 'name', 'email'];
-  //  dataSource: MatTableDataSource<PersonModel> = new MatTableDataSource();
-
+export class PersonComponent implements OnInit, AfterViewInit {
+  searchTableField = '';
+  searchUnderTableField = '';
   dataSource = new MatTableDataSource<PersonModel>();
+  displayedColumns: string[] = ['#', 'id', 'name', 'email', 'status', 'actions'];
   @ViewChild(MatPaginator, { static: true })
   paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: true })
+  @ViewChild(MatSort)
   sort!: MatSort;
+  @ViewChild(MatTable, { static: true }) table: MatTable<any> | undefined;
+
+  constructor(private personService: PersonService, private dialog:MatDialog) { }
+
   ngOnInit(): void {
     this.loadData();
   }
 
+
+
   loadData() {
     this.personService.getPersons().subscribe((data: PersonModel[]) => {
-      this.personList = data;
-      this.dataSource = new MatTableDataSource<PersonModel>(data);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      /* console.log(JSON.stringify(data));
-       let _find = this.personList.find(x => x.email == 'chaibi.redouane@gmail.com');
-       console.log(JSON.stringify(_find));
-       if (_find != null) {
-         _find.name = 'REDOUANE UPDATE';
-         this.personService.updatePerson(_find).subscribe();
-       }*/
+      if (data != null && data.length > 0) {
+        this.dataSource = new MatTableDataSource<PersonModel>(data);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.dataSource.filter = this.searchTableField;
+      }
+    },
+      error => {
+        console.log(error.message);
+      });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  applyFilter(filterValue: string) {
+    this.applyCustomFilter();
+    this.dataSource.filter = filterValue == null ? '' : filterValue.trim().toLowerCase();
+  }
+
+  applyCustomFilter() {
+
+  }
+
+  clearTableFilter() {
+    this.searchTableField = '';
+    this.dataSource.filter = '';
+  }
+
+  getColor(value: boolean) {
+    return status ? 'green' : 'red';
+  }
+
+  openDialog(action: string, row: PersonModel) {
+    const obj = {
+      action: action,
+      dataSource: row == null ? new PersonModel() : row,
+    };
+   const dialogRef = this.dialog.open(PersonDialogComponent, {
+      width: '450px',
+      data: obj,
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.event === 'ADD') {
+        this.createItem(result.data);
+      } else if (result.event === 'UPDATE') {
+        this.updateItem(result.data);
+      }
+    });
+    
+  }
+
+  updateItem(item: PersonModel) {
+    this.personService.updatePerson(item).subscribe(data => {
+      this.loadData();
     });
   }
 
-  createItem() {
-    const p = new PersonModel();
-    p.name = 'NEW PERSON';
-    p.email = 'TEST@NEW.COM'
-    this.personService.createPerson(p).subscribe(data => {
+  deleteItem(item: PersonModel) {
+    const _id = item.id;
+    if (_id != null) {
+      this.personService.deletePerson(+_id).subscribe(data => {
+        console.log('delete');
+        this.loadData();
+      })
+    }
+  }
+
+  createItem(item: PersonModel) {
+    this.personService.createPerson(item).subscribe(data => {
       this.loadData();
     })
   }
 
-  applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
-  }
 }

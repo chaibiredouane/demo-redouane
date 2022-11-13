@@ -8,7 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCell, MatHeaderCell, MatHeaderRow, MatRow, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { ExempleTableComponent } from './pages/exemple-table/exemple-table.component';
 import { MatIconModule } from '@angular/material/icon'
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
@@ -21,14 +20,15 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { HomeComponent } from './pages/home/home.component';
 @NgModule({
   declarations: [
     AppComponent,
     PersonComponent,
-    ExempleTableComponent,
     PersonComponent,
     PersonDialogComponent,
     MainNavComponent,
+    HomeComponent,
 
   ],
   imports: [
