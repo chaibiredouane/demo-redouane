@@ -3,24 +3,25 @@
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false">
     <mat-toolbar>
-      <div class="circle rounded-circle mx-auto d-block"> 
-      <span class="row material-icons pd-15 pl-35">person</span>
-      <span class="row" style="font-size: small; margin-top: -10px; padding-left: 30px;">rchaibi</span></div>
+      <div class="circle rounded-circle mx-auto d-block">
+        <span class="row material-icons pd-15 pl-35">person</span>
+        <span class="row" style="font-size: small; margin-top: -10px; padding-left: 30px;">rchaibi</span>
+      </div>
     </mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item href="#">HOME</a>
-      <a mat-list-item href="#person">PERSON</a>
-      <a mat-list-item href="#">Link 3</a>
+      <a mat-list-item [routerLink]="'home'">HOME</a>
+      <a mat-list-item [routerLink]="'person'">PERSON</a>
+      <a mat-list-item [routerLink]="''">Link 3</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar class="bg-color">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      <span>DEMO REDOUANE</span>
-    </mat-toolbar>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
+    <mat-toolbar class=" bg-color">
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+          *ngIf="isHandset$ | async">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <span>DEMO REDOUANE</span>
+        </mat-toolbar>
+        <router-outlet></router-outlet>
+        </mat-sidenav-content>
 </mat-sidenav-container>
