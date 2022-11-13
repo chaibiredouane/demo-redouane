@@ -1,0 +1,38 @@
+
+<div class="container">
+    <div class="row">
+        <div class="card">
+            <div class="card-header card-header-icon description" style="display: inherit; height: 60px; padding-top: 20px; background-color: aliceblue;">
+                <div class="card-icon"><span class="material-icons">{{getIconAction(local_data.action)}}</span></div>
+                <h4 class="card-title"><strong>{{local_data.action}} </strong></h4>
+                <br>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                            <mat-form-field appearance="outline">
+                                <mat-label>name</mat-label>
+                                <mat-icon class="required" matSuffix>person</mat-icon>
+                                <input matInput [(ngModel)]="dataSource.name" autocomplete="off" required>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>email</mat-label>
+                                <mat-icon class="required" title="email" matSuffix>email</mat-icon>
+                                <input matInput [(ngModel)]="dataSource.email" autocomplete="off">
+                            </mat-form-field>
+
+                    <div class="">                       
+                       <button mat-raised-button mat-mini-fab type="button" class="btn btn-fab btn-success" color="green" style=" margin: 5px;"
+                        (click)="doAction()" [disabled]="isInvalidForm()" title="save">
+                            <span class="material-icons">check</span>
+                        </button>
+
+                        <button mat-raised-button mat-mini-fab type="button" class="btn btn-fab btn-danger" color="red" style=" margin: 5px;"
+                         (click)="closeDialog()" title="close">
+                            <span class="material-icons">logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
